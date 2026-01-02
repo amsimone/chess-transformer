@@ -1,0 +1,28 @@
+# Bytecode / cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.so
+
+# Virtual environments
+.venv/
+venv/
+
+# Dataset artifacts
+data/raw/
+data/dataset/
+data/ds/
+data/val_ds/
+
+# Training/eval outputs
+runs/
+*.pt
+
+# Logs
+*.log
+
+# Editor backups
+*~
+
+# OS metadata
+.DS_Store
