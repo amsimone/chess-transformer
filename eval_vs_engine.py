@@ -58,6 +58,10 @@ def main():
     ap.add_argument("--games", type=int, default=10, help="Number of games to play.")
     ap.add_argument("--engine-move-time", type=float, default=0.1, help="Engine time per move in seconds.")
     ap.add_argument("--engine-depth", type=int, default=None, help="Optional fixed search depth.")
+    ap.add_argument("--engine-skill", type=int, default=20,
+                    help="Stockfish Skill Level (0-20). Lower values weaken the engine.")
+    ap.add_argument("--engine-elo", type=int, default=None,
+                    help="Set UCI_LimitStrength with this Elo (e.g., 800). Ignored if not set.")
     ap.add_argument("--temperature", type=float, default=0.0, help="Sampling temperature for the policy.")
     ap.add_argument("--max-moves", type=int, default=200, help="Max plies before declaring a draw.")
     ap.add_argument("--fen", type=str, default=chess.STARTING_FEN, help="Starting position FEN.")
@@ -73,6 +77,12 @@ def main():
         raise ValueError("Engine command is empty.")
     print(f"[info] starting engine: {' '.join(cmd)}")
     engine = chess.engine.SimpleEngine.popen_uci(cmd)
+    cfg = {"Skill Level": max(0, min(20, args.engine_skill))}
+    if args.engine_elo is not None:
+        cfg["UCI_LimitStrength"] = True
+        cfg["UCI_Elo"] = max(100, args.engine_elo)
+    if cfg:
+        engine.configure(cfg)
 
     limit_kwargs = {}
     if args.engine_move_time is not None:
